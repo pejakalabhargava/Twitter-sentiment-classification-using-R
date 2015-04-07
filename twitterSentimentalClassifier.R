@@ -79,13 +79,20 @@ summary(tweetCorpus)
 #step4: Create DocumentMatrix
 twitterDocMatrix <- DocumentTermMatrix(tweetCorpus, control = list(minWordLength = 1))
 twitterDocMatrix
-#findFreqTerms(twitterDocMatrix, lowfreq=15)
-#findAssocs(twitterDocMatrix, "love", 0.4)
 dm = as.matrix(twitterDocMatrix)
+
 #---------------------------------------------------------------------------------------
 
-#TODO
 #step5: Feature Selection
+frequentTerms =findFreqTerms(twitterDocMatrix, lowfreq=5)
+#findAssocs(twitterDocMatrix, "love", 0.4)
+dm.matrix = as.matrix(twitterDocMatrix)
+dm.matrix = dm[,frequentTerms]
+dim(dm.matrix)
+colSum = colSums(dm.matrix)
+colSum[colSum>10]
+colnames(dm.matrix)
+dm.dataFrame = as.data.frame(dm.matrix)
 #---------------------------------------------------------------------------------------
 
 #TODO
