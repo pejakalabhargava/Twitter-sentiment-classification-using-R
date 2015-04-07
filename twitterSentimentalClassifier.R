@@ -52,33 +52,41 @@ twitter.preprocessTweets <- function(tweets) {
   return(tweetCorpus)
 }
 #End of function definitions
+
 #---------------------------------------------------------------------------------------
-#---------------------------------------------------------------------------------------
+
 #step 0: Load required Libraries
+install.requiredPackages
 load.requiredLibraries()
 #---------------------------------------------------------------------------------------
+
 #Step1 : Authenticate
 consumerKey <- "AZ5TeacQBwKvjljHdzMytp1GL"
 consumerSecret <- "noJOtlBCE0tRf1dNUJBm7ilp5reS627TjuawPpkn5cfHATQzNS"
 authentication_file = twitter.authenticate(consumerKey=consumerKey,consumerSecret = consumerSecret)
 load(authentication_file)
 #---------------------------------------------------------------------------------------
+
 #Step2: Get all tweets filtered by 'love' or 'hate'
 tweets = twitter.getTweets(timeOut=10,noOfTweets=300)
 #---------------------------------------------------------------------------------------
+
 #step3: Preprocess Tweets
 tweetCorpus = twitter.preprocessTweets(tweets)
 summary(tweetCorpus)
 #---------------------------------------------------------------------------------------
+
 #step4: Create DocumentMatrix
 twitterDocMatrix <- TermDocumentMatrix(tweetCorpus, control = list(minWordLength = 1))
 twitterDocMatrix
 #findFreqTerms(twitterDocMatrix, lowfreq=15)
 #findAssocs(twitterDocMatrix, "love", 0.4)
 #---------------------------------------------------------------------------------------
+
 #TODO
 #step5: Feature Selection
 #---------------------------------------------------------------------------------------
+
 #TODO
 #step6: Build Model
 #---------------------------------------------------------------------------------------
