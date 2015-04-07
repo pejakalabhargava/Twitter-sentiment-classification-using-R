@@ -51,6 +51,13 @@ twitter.preprocessTweets <- function(tweets) {
   tweetCorpus <- tm_map(tweetCorpus, PlainTextDocument)
   return(tweetCorpus)
 }
+
+twitter.selectFeatures <- function(twitterDocMatrix,minfreq = 5) {
+  frequentTerms =findFreqTerms(twitterDocMatrix, lowfreq=minfreq)
+  dm.matrix = as.matrix(twitterDocMatrix)
+  dm.matrix = dm[,frequentTerms]
+  return(dm.matrix)
+}
 #End of function definitions
 
 #---------------------------------------------------------------------------------------
@@ -78,17 +85,13 @@ summary(tweetCorpus)
 
 #step4: Create DocumentMatrix
 twitterDocMatrix <- DocumentTermMatrix(tweetCorpus, control = list(minWordLength = 1))
-twitterDocMatrix
-dm = as.matrix(twitterDocMatrix)
-
 #---------------------------------------------------------------------------------------
 
 #step5: Feature Selection
-frequentTerms =findFreqTerms(twitterDocMatrix, lowfreq=5)
 #findAssocs(twitterDocMatrix, "love", 0.4)
-dm.matrix = as.matrix(twitterDocMatrix)
-dm.matrix = dm[,frequentTerms]
-dim(dm.matrix)
+doc.matrix = twitter.selectFeatures(twitterDocMatrix,minfreq = 5)
+
+dim(doc.matrix)
 colSum = colSums(dm.matrix)
 colSum[colSum>10]
 colnames(dm.matrix)
