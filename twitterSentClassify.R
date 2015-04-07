@@ -1,3 +1,4 @@
+#Install required packages
 install.packages("streamR")
 install.packages("devtools")
 install.packages("ROAuth")
