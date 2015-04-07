@@ -82,14 +82,3 @@ twitterDocMatrix
 #TODO
 #step6: Build Model
 #---------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-# tweetsDTM <- DocumentTermMatrix(tweets)
