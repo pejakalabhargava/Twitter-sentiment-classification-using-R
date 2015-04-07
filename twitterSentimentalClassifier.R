@@ -77,10 +77,11 @@ summary(tweetCorpus)
 #---------------------------------------------------------------------------------------
 
 #step4: Create DocumentMatrix
-twitterDocMatrix <- TermDocumentMatrix(tweetCorpus, control = list(minWordLength = 1))
+twitterDocMatrix <- DocumentTermMatrix(tweetCorpus, control = list(minWordLength = 1))
 twitterDocMatrix
 #findFreqTerms(twitterDocMatrix, lowfreq=15)
 #findAssocs(twitterDocMatrix, "love", 0.4)
+dm = as.matrix(twitterDocMatrix)
 #---------------------------------------------------------------------------------------
 
 #TODO
