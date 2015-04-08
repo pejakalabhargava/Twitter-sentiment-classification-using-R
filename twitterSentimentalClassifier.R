@@ -94,7 +94,7 @@ load.requiredLibraries()
 consumerKey <- "AZ5TeacQBwKvjljHdzMytp1GL"
 consumerSecret <- "noJOtlBCE0tRf1dNUJBm7ilp5reS627TjuawPpkn5cfHATQzNS"
 authentication_file = twitter.authenticate(consumerKey=consumerKey,consumerSecret = consumerSecret)
-load(my_oauth.Rdata)
+load(authentication_file)
 #---------------------------------------------------------------------------------------
 
 #Step2: Get all tweets filtered by 'love' or 'hate'
