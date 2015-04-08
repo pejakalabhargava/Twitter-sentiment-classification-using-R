@@ -184,7 +184,7 @@ table(modelPredict,testdoc.dataFrame$Class)
 #---------------------------------------------------------------------------------------
 #THINGS TO DO
 #1. SPlit the trainign data to to check the model in the first model building step(Something like cross validation)
-#2. Selction features : Consider PCA/or any other feature selection steps
+#2. Selction features : Consider PCA/or any other feature selection steps.
 #3. Model rebulidng code modification to make it work
 #4. Iteation to rebuild code and print accuracy each step
-#5. COmment incorporaions
+#5. Comment incorporaions and README
