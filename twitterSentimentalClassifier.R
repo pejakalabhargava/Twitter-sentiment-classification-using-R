@@ -38,13 +38,13 @@ twitter.getTweets <- function(timeOut=10,noOfTweets=300) {
   filterStream("tweets.json", track = c("love","hate"), timeout = timeOut, oauth = my_oauth, language="en", tweets=noOfTweets)
   tweets <- parseTweets("tweets.json", simplify = TRUE)
   tweets = tweets$text
-  tweets = iconv(tweets, "ASCII", "UTF-8", sub="")
-  tweets = iconv(tweets, "ISO_8859-2", "UTF-8",sub="")
-  tweets = iconv(tweets, "LATIN2", "UTF-8",sub="")
   return(tweets)
 }
 
 twitter.preprocessTweets <- function(tweets) {
+  tweets = iconv(tweets, "ASCII", "UTF-8", sub="")
+  tweets = iconv(tweets, "ISO_8859-2", "UTF-8",sub="")
+  tweets = iconv(tweets, "LATIN2", "UTF-8",sub="")
   tweetCorpus <- Corpus(VectorSource(tweets),readerControl=list(language="en"))
   tweetCorpus <- tm_map(tweetCorpus, tolower)
   tweetCorpus <- tm_map(tweetCorpus, removePunctuation)
