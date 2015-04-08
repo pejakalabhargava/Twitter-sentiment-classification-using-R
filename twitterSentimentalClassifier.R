@@ -118,7 +118,7 @@ doc.matrix = twitter.selectFeatures(twitterDocMatrix,minfreq = 5)
 
 #step6: Build Model
 #cols=setdiff(colnames(doc.matrix),c('love','hate'))
-#allColumns = paste("Class ~ ", paste(cols, collapse= "+"))
+#allColumns = paste("Class ~ ", paste(cols, collapse= " + "))
 #gl.fmla <<- as.formula(allColumns)
 
 #Appened Class to the model
@@ -137,7 +137,7 @@ doc.dataFrame <- factorise(doc.dataFrame)
 #hdt <- HoeffdingTree(numericEstimator = "GaussianNumericAttributeClassObserver", splitConfidence = "1")
 hdt <- HoeffdingTree(splitConfidence="0.9")
 datastream <- datastream_dataframe(data=doc.dataFrame)
-model <- trainMOA(model=hdt, formula=Class ~ ., data=datastream)
+model <- trainMOA(model=hdt, formula=Class ~ ., data=datastream,chunksize = 10)
 model$model
 
 #GetTestData
