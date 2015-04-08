@@ -49,7 +49,6 @@ twitter.preprocessTweets <- function(tweets) {
   tweetCorpus <- tm_map(tweetCorpus, tolower)
   tweetCorpus <- tm_map(tweetCorpus, removePunctuation)
   tweetCorpus <- tm_map(tweetCorpus, removeNumbers)
-  tweetCorpus <- tm_map(tweetCorpus, removeNumbers)
   tweetCorpus <- tm_map(tweetCorpus, removeWords, c(stopwords("english"),"rt","http","retweet"))
   tweetCorpus <- tm_map(tweetCorpus, stemDocument, language="english")
   tweetCorpus <- tm_map(tweetCorpus, PlainTextDocument)
@@ -57,6 +56,7 @@ twitter.preprocessTweets <- function(tweets) {
 }
 
 twitter.selectFeatures <- function(twitterDocMatrix,minfreq = 5) {
+  #TODO : CHECK FOR PCA/ANy other method
   frequentTerms =findFreqTerms(twitterDocMatrix, lowfreq=minfreq)
   dm.matrix = as.matrix(twitterDocMatrix)
   dm.matrix =  dm.matrix[,frequentTerms]
@@ -182,3 +182,9 @@ table(modelPredict,testdoc.dataFrame$Class)
 
 
 #---------------------------------------------------------------------------------------
+#THINGS TO DO
+#1. SPlit the trainign data to to check the model in the first model building step(Something like cross validation)
+#2. Selction features : Consider PCA/or any other feature selection steps
+#3. Model rebulidng code modification to make it work
+#4. Iteation to rebuild code and print accuracy each step
+#5. COmment incorporaions
