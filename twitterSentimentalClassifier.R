@@ -72,12 +72,23 @@ twitter.appendClass <- function(doc.matrixToModify) {
   return(doc.dataFrame)
 }
 
-twitter.getTestTweetMatrix <- function() {
+twitter.getTestData <- function(trainDataFrame) {
   testTweets = twitter.getTweets(timeOut=10,noOfTweets=300)
   testTweetCorpus = twitter.preprocessTweets(testTweets)
   testTwitterDocMatrix <- DocumentTermMatrix(testTweetCorpus, control = list(minWordLength = 1))
   testdoc.matrix= as.matrix(testTwitterDocMatrix)
-  return(testdoc.matrix)
+  testdoc.dataFrame = twitter.appendClass(testdoc.matrix)
+  
+  length(which(testdoc.dataFrame$Class=='hate'))
+  length(which(testdoc.dataFrame$Class=='love'))
+  names = colnames(trainDataFrame)
+  colsToAdd = names[which(!names%in%colnames(testdoc.dataFrame))]
+  testdoc.dataFrame[,colsToAdd]=0
+  
+  #remove class
+  testdocWithoutClass.dataframe = subset(testdoc.dataFrame, select=-love)
+  testdocWithoutClass.dataframe = subset(testdoc.dataFrame, select=-hate)
+  return(testdocWithoutClass.dataframe)
 }
 
 
@@ -130,8 +141,6 @@ length(which(doc.dataFrame$Class=='love'))
 doc.dataFrame = subset(doc.dataFrame, select=-love)
 doc.dataFrame = subset(doc.dataFrame, select=-hate)
 
-
-
 #Train the model using HoeffdingTree
 doc.dataFrame <- factorise(doc.dataFrame)
 #hdt <- HoeffdingTree(numericEstimator = "GaussianNumericAttributeClassObserver", splitConfidence = "1")
@@ -141,27 +150,38 @@ model <- trainMOA(model=hdt, formula=Class ~ ., data=datastream,chunksize = 10)
 model$model
 
 #GetTestData
-testdoc.matrix = twitter.getTestTweetMatrix()
-testdoc.dataFrame = twitter.appendClass(testdoc.matrix)
-
-length(which(testdoc.dataFrame$Class=='hate'))
-length(which(testdoc.dataFrame$Class=='love'))
-
-
-names = colnames(doc.dataFrame)
-colsToAdd = names[which(!names%in%colnames(testdoc.dataFrame))]
-testdoc.dataFrame[,colsToAdd]=0
-
-#remove class
-testdocWithoutClass.dataframe = subset(testdoc.dataFrame, select=-love)
-testdocWithoutClass.dataframe = subset(testdoc.dataFrame, select=-hate)
-
-
+testdocWithoutClass.dataframe = twitter.getTestData(doc.dataFrame)
 testdocWithoutClass.dataframe <- factorise(testdocWithoutClass.dataframe)
 
 #colnames(testdoc.dataframe)[which(!colnames(testdoc.dataframe)%in%colnames(testdocWithoutClass.dataframe))]
 modelPredict <- predict(model, newdata = testdocWithoutClass.dataframe)
 
 #Build contigency table
+table(modelPredict,testdocWithoutClass.dataframe$Class)
+
+------------------------------------------------------------------------------
+#TODO : Need to FIx this
+#REBUILD MODEL
+cols=setdiff(colnames(testdocWithoutClass.dataframe),c('Class'))
+allColumns = paste("Class ~ ", paste(cols, collapse= " + "))
+formula.rebuildModel <<- as.formula(allColumns)
+testTweetCorpus <- Corpus(VectorSource(testdocWithoutClass.dataframe),readerControl=list(language="en"))
+testDocMat <- DocumentTermMatrix(testTweetCorpus, control = list(minWordLength = 1))
+testdocWithoutClassM.dataMat = twitter.selectFeatures(testDocMat,minfreq = 5)
+testdocWithoutClass.dataframe = as.data.frame(testdocWithoutClassM.dataMat)
+datastream <- datastream_dataframe(data=testdocWithoutClass.dataframe)
+model <- trainMOA(model = model$model, formula=formula.rebuildModel, data = datastream, reset = F, chunksize = 10)
+model$model
+
+#Test model
+testdocUpdated.dataframe = twitter.getTestData(testdocWithoutClass.dataframe)
+testdocUpdated.dataframe <- factorise(testdocUpdated.dataframe)
+
+colnames(testdocWithoutClass.dataframe)[which(!colnames(testdocWithoutClass.dataframe)%in%colnames(testdocUpdated.dataframe))]
+modelPredict <- predict(model, newdata = testdocWithoutClass.dataframe)
+
+#Build contigency table
 table(modelPredict,testdoc.dataFrame$Class)
+
+
 #---------------------------------------------------------------------------------------
