@@ -93,6 +93,7 @@ load.requiredLibraries()
 #Step1 : Authenticate
 consumerKey <- "AZ5TeacQBwKvjljHdzMytp1GL"
 consumerSecret <- "noJOtlBCE0tRf1dNUJBm7ilp5reS627TjuawPpkn5cfHATQzNS"
+options(httr_oauth_cache=T)
 authentication_file = twitter.authenticate(consumerKey=consumerKey,consumerSecret = consumerSecret)
 load(authentication_file)
 #---------------------------------------------------------------------------------------
