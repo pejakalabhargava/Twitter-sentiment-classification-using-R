@@ -125,10 +125,16 @@ doc.dataFrame = twitter.appendClass(doc.matrix)
 length(which(doc.dataFrame$Class=='hate'))
 length(which(doc.dataFrame$Class=='love'))
 
+#remove love hate colum
+doc.dataFrame = subset(doc.dataFrame, select=-love)
+doc.dataFrame = subset(doc.dataFrame, select=-hate)
+
+
+
 #Train the model using HoeffdingTree
 doc.dataFrame <- factorise(doc.dataFrame)
 #hdt <- HoeffdingTree(numericEstimator = "GaussianNumericAttributeClassObserver", splitConfidence = "1")
-hdt <- HoeffdingTree(splitConfidence="0.5")
+hdt <- HoeffdingTree(splitConfidence="0.9")
 datastream <- datastream_dataframe(data=doc.dataFrame)
 model <- trainMOA(model=hdt, formula=Class ~ ., data=datastream)
 model$model
@@ -146,7 +152,10 @@ colsToAdd = names[which(!names%in%colnames(testdoc.dataFrame))]
 testdoc.dataFrame[,colsToAdd]=0
 
 #remove class
-testdocWithoutClass.dataframe = subset(testdoc.dataFrame, select=-Class)
+testdocWithoutClass.dataframe = subset(testdoc.dataFrame, select=-love)
+testdocWithoutClass.dataframe = subset(testdoc.dataFrame, select=-hate)
+
+
 testdocWithoutClass.dataframe <- factorise(testdocWithoutClass.dataframe)
 
 #colnames(testdoc.dataframe)[which(!colnames(testdoc.dataframe)%in%colnames(testdocWithoutClass.dataframe))]
