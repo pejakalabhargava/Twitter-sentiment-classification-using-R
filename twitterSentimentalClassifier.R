@@ -117,9 +117,9 @@ doc.matrix = twitter.selectFeatures(twitterDocMatrix,minfreq = 5)
 #---------------------------------------------------------------------------------------
 
 #step6: Build Model
-
-allColumns = paste("Class ~ ", paste(colnames(doc.matrix), collapse= "+"))
-gl.fmla <<- as.formula(allColumns)
+#cols=setdiff(colnames(doc.matrix),c('love','hate'))
+#allColumns = paste("Class ~ ", paste(cols, collapse= "+"))
+#gl.fmla <<- as.formula(allColumns)
 
 #Appened Class to the model
 doc.dataFrame = twitter.appendClass(doc.matrix)
