@@ -160,7 +160,7 @@ modelPredict <- predict(model, newdata = testdocWithoutClass.dataframe)
 table(modelPredict,testdocWithoutClass.dataframe$Class)
 
 ------------------------------------------------------------------------------
-#TODO : Need to FIx this 
+#TODO : Need to FIx this | Wont run for now 
 #REBUILD MODEL
 cols=setdiff(colnames(testdocWithoutClass.dataframe),c('Class'))
 allColumns = paste("Class ~ ", paste(cols, collapse= " + "))
