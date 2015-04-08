@@ -188,3 +188,4 @@ table(modelPredict,testdoc.dataFrame$Class)
 #3. Model rebulidng code modification to make it work - Rakesh
 #4. Iteation to rebuild code and print accuracy each step - Rakesh
 #5. Comment incorporaions and README -Bhargava
+#6. Consider using weights for the model - Bhargava
