@@ -153,18 +153,18 @@ model$model
 testdocWithoutClass.dataframe = twitter.getTestData(doc.dataFrame)
 testdocWithoutClass.dataframe <- factorise(testdocWithoutClass.dataframe)
 
-#colnames(testdoc.dataframe)[which(!colnames(testdoc.dataframe)%in%colnames(testdocWithoutClass.dataframe))]
+#colnames(doc.dataFrame)[which(!colnames(doc.dataFrame)%in%colnames(testdocWithoutClass.dataframe))]
 modelPredict <- predict(model, newdata = testdocWithoutClass.dataframe)
 
 #Build contigency table
 table(modelPredict,testdocWithoutClass.dataframe$Class)
 
 ------------------------------------------------------------------------------
-#TODO : Need to FIx this
+#TODO : Need to FIx this 
 #REBUILD MODEL
 cols=setdiff(colnames(testdocWithoutClass.dataframe),c('Class'))
 allColumns = paste("Class ~ ", paste(cols, collapse= " + "))
-formula.rebuildModel <<- as.formula(allColumns)
+formula.rebuildModel=as.formula(allColumns)
 testTweetCorpus <- Corpus(VectorSource(testdocWithoutClass.dataframe),readerControl=list(language="en"))
 testDocMat <- DocumentTermMatrix(testTweetCorpus, control = list(minWordLength = 1))
 testdocWithoutClassM.dataMat = twitter.selectFeatures(testDocMat,minfreq = 5)
