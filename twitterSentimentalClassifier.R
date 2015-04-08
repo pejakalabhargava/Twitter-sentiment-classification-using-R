@@ -97,7 +97,7 @@ twitter.getTestData <- function(trainDataFrame) {
 #---------------------------------------------------------------------------------------
 
 #step 0: Load required Libraries
-install.requiredPackages
+install.requiredPackages()
 load.requiredLibraries()
 #---------------------------------------------------------------------------------------
 
