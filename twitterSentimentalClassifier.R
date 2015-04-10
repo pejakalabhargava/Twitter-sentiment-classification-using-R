@@ -42,7 +42,11 @@ twitter.getTweets <- function(timeOut=10,noOfTweets=300) {
 }
 
 removeURL <- function(tweetText) {
+<<<<<<< HEAD
+  gsub("http[[:alnum:][:punct:]]+", "", tweetText)
+=======
      gsub("http[[:alnum:][:punct:]]+", "", tweetText)
+>>>>>>> 37f438ff4c0301d132fb209b8bfbeb468fd2a113
 }
 
 twitter.preprocessTweets <- function(tweets) {
@@ -78,24 +82,45 @@ twitter.appendClass <- function(doc.matrixToModify) {
 }
 
 twitter.getTestData <- function(trainDataFrame) {
+  # Get tweets for the test data
   testTweets = twitter.getTweets(timeOut=10,noOfTweets=300)
+  # Preprocess the test tweets
   testTweetCorpus = twitter.preprocessTweets(testTweets)
+  # Construct the Doc Term Matrix
   testTwitterDocMatrix <- DocumentTermMatrix(testTweetCorpus, control = list(minWordLength = 1))
   testdoc.matrix= as.matrix(testTwitterDocMatrix)
   testdoc.dataFrame = twitter.appendClass(testdoc.matrix)
+    
+  # Columns to add to the test dataframe, ie, the ones in training data but not in test data
+  trainDataFrameNames = colnames(trainDataFrame)
+  colsToAdd = trainDataFrameNames[which(!trainDataFrameNames%in%colnames(testdoc.dataFrame))]
   
-  length(which(testdoc.dataFrame$Class=='hate'))
-  length(which(testdoc.dataFrame$Class=='love'))
-  names = colnames(trainDataFrame)
-  colsToAdd = names[which(!names%in%colnames(testdoc.dataFrame))]
-  testdoc.dataFrame[,colsToAdd]=0
+  # Add the required columns
+  testdoc.dataFrame[, colsToAdd] = 0
   
-  #remove class
-  testdocWithoutClass.dataframe = subset(testdoc.dataFrame, select=-love)
-  testdocWithoutClass.dataframe = subset(testdoc.dataFrame, select=-hate)
-  return(testdocWithoutClass.dataframe)
+  # Columns to remove from the test dataframe, ie, the ones in test data but not in train data
+  testDataFrameNames = colnames(testdoc.dataFrame)
+  colsToRemove = testDataFrameNames[which(!testDataFrameNames%in%trainDataFrameNames)]
+  
+  # Remove the unnecessary columns
+  testdoc.dataFrame = testdoc.dataFrame[, -which(names(testdoc.dataFrame)%in%colsToRemove)]
+  
+  # Copy and remove the 'Class' column, since we need that to be the last 
+  testdoc.dataFrame.class = testdoc.dataFrame$Class
+  testdoc.dataFrame = testdoc.dataFrame[, -which(names(testdoc.dataFrame)%in%c("Class"))]
+  
+  # Sort the columns of the test data frame
+  testdoc.dataFrame = testdoc.dataFrame[, order(names(testdoc.dataFrame))]
+  
+  # Append the Class column so that it is at the last position
+  testdoc.dataFrame$Class = testdoc.dataFrame.class
+  
+  # remove class
+  # Commented the below two since that will be taken care of while removing columns to match the train data
+  # testdocWithoutClass.dataframe = subset(testdoc.dataFrame, select=-love)
+  # testdocWithoutClass.dataframe = subset(testdoc.dataFrame, select=-hate)
+  return(testdoc.dataFrame)
 }
-
 
 #End of function definitions
 
@@ -107,8 +132,8 @@ load.requiredLibraries()
 #---------------------------------------------------------------------------------------
 
 #Step1 : Authenticate
-consumerKey <- "AZ5TeacQBwKvjljHdzMytp1GL"
-consumerSecret <- "noJOtlBCE0tRf1dNUJBm7ilp5reS627TjuawPpkn5cfHATQzNS"
+consumerKey <- "UPNJX5tOEJekgW3OWGzf10ewQ"
+consumerSecret <- "uC2eORsbRkUb4QEORhvcZwfodh5XIR34mTGEoDzUe7R5JFdiVl"
 options(httr_oauth_cache=T)
 authentication_file = twitter.authenticate(consumerKey=consumerKey,consumerSecret = consumerSecret)
 load(authentication_file)
@@ -120,7 +145,6 @@ tweets = twitter.getTweets(timeOut=30,noOfTweets=3000)
 
 #step3: Preprocess Tweets
 tweetCorpus = twitter.preprocessTweets(tweets)
-summary(tweetCorpus)
 #---------------------------------------------------------------------------------------
 
 #step4: Create DocumentMatrix
@@ -129,15 +153,13 @@ twitterDocMatrix <- DocumentTermMatrix(tweetCorpus, control = list(minWordLength
 
 #step5: Feature Selection
 #findAssocs(twitterDocMatrix, "love", 0.4)
-doc.matrix = twitter.selectFeatures(twitterDocMatrix,minfreq = 5)
+doc.matrix = twitter.selectFeatures(twitterDocMatrix,minfreq = 3)
 #---------------------------------------------------------------------------------------
 
 #step6: Build Model
 
 #Appened Class to the model
 doc.dataFrame = twitter.appendClass(doc.matrix)
-length(which(doc.dataFrame$Class=='hate'))
-length(which(doc.dataFrame$Class=='love'))
 
 #remove love hate colum
 doc.dataFrame = subset(doc.dataFrame, select=-love)
@@ -146,51 +168,45 @@ doc.dataFrame = subset(doc.dataFrame, select=-hate)
 #Train the model using HoeffdingTree
 doc.dataFrame <- factorise(doc.dataFrame)
 #hdt <- HoeffdingTree(numericEstimator = "GaussianNumericAttributeClassObserver", splitConfidence = "1")
-hdt <- HoeffdingTree(splitConfidence="0.9")
+hdt <- HoeffdingTree(splitConfidence="0.5")
 datastream <- datastream_dataframe(data=doc.dataFrame)
 model <- trainMOA(model=hdt, formula=Class ~ ., data=datastream,chunksize = 10)
 model$model
 
 #GetTestData
-testdocWithoutClass.dataframe = twitter.getTestData(doc.dataFrame)
+if (file.exists("tweets.json")) file.remove("tweets.json")
+testdocWithoutClass.dataframe = twitter.getTestData(trainDataFrame = doc.dataFrame)
 testdocWithoutClass.dataframe <- factorise(testdocWithoutClass.dataframe)
+testdocWithoutClass.dataframe = testdocWithoutClass.dataframe[1:100, ]
 
 #colnames(doc.dataFrame)[which(!colnames(doc.dataFrame)%in%colnames(testdocWithoutClass.dataframe))]
 modelPredict <- predict(model, newdata = testdocWithoutClass.dataframe)
 
 #Build contigency table
 table(modelPredict,testdocWithoutClass.dataframe$Class)
-
-------------------------------------------------------------------------------
-#TODO : Need to FIx this | Wont run for now 
+ 
 #REBUILD MODEL
+# Build the formula using the column names
 cols=setdiff(colnames(testdocWithoutClass.dataframe),c('Class'))
 allColumns = paste("Class ~ ", paste(cols, collapse= " + "))
 formula.rebuildModel=as.formula(allColumns)
-testTweetCorpus <- Corpus(VectorSource(testdocWithoutClass.dataframe),readerControl=list(language="en"))
-testDocMat <- DocumentTermMatrix(testTweetCorpus, control = list(minWordLength = 1))
-testdocWithoutClassM.dataMat = twitter.selectFeatures(testDocMat,minfreq = 5)
-testdocWithoutClass.dataframe = as.data.frame(testdocWithoutClassM.dataMat)
-datastream <- datastream_dataframe(data=testdocWithoutClass.dataframe)
-model <- trainMOA(model = model$model, formula=formula.rebuildModel, data = datastream, reset = F, chunksize = 10)
-model$model
 
-#Test model
-testdocUpdated.dataframe = twitter.getTestData(testdocWithoutClass.dataframe)
-testdocUpdated.dataframe <- factorise(testdocUpdated.dataframe)
-
-colnames(testdocWithoutClass.dataframe)[which(!colnames(testdocWithoutClass.dataframe)%in%colnames(testdocUpdated.dataframe))]
-modelPredict <- predict(model, newdata = testdocWithoutClass.dataframe)
-
-#Build contigency table
-table(modelPredict,testdoc.dataFrame$Class)
-
-
-#---------------------------------------------------------------------------------------
-#THINGS TO DO
-#1. SPlit the trainign data to to check the model in the first model building step(Something like cross validation)-Nakul
-#2. Selction features : Consider PCA/or any other feature selection steps.-Nakul
-#3. Model rebulidng code modification to make it work - Rakesh
-#4. Iteation to rebuild code and print accuracy each step - Rakesh
-#5. Comment incorporaions and README -Bhargava
-#6. Consider using weights for the model - Bhargava
+noOfIterations = 5
+for(i in 1:noOfIterations) {
+  
+  # Rebuild the model by sending the existing set of testTweets as a stream
+  datastream <- datastream_dataframe(data=testdocWithoutClass.dataframe)
+  model <- trainMOA(model = model$model, formula=formula.rebuildModel, data = datastream, reset = F, chunksize = 10)
+  
+  #Test model against a new batch of tweets
+  if (file.exists("tweets.json")) file.remove("tweets.json")
+  testdocWithoutClass.dataframe = twitter.getTestData(doc.dataFrame)
+  testdocWithoutClass.dataframe <- factorise(testdocWithoutClass.dataframe)
+  testdocWithoutClass.dataframe = testdocWithoutClass.dataframe[1:100, ]
+  
+  # Predict the category for the new set of test tweets using the new model 
+  modelPredict <- predict(model, newdata = testdocWithoutClass.dataframe)
+  
+  #Build contigency table
+  table(modelPredict,testdocWithoutClass.dataframe$Class)
+}
