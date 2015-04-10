@@ -41,12 +41,17 @@ twitter.getTweets <- function(timeOut=10,noOfTweets=300) {
   return(tweets)
 }
 
+removeURL <- function(tweetText) {
+     gsub("http[[:alnum:][:punct:]]+", "", tweetText)
+}
+
 twitter.preprocessTweets <- function(tweets) {
   tweets = iconv(tweets, "ASCII", "UTF-8", sub="")
   tweets = iconv(tweets, "ISO_8859-2", "UTF-8",sub="")
   tweets = iconv(tweets, "LATIN2", "UTF-8",sub="")
   tweetCorpus <- Corpus(VectorSource(tweets),readerControl=list(language="en"))
   tweetCorpus <- tm_map(tweetCorpus, tolower)
+  tweetCorpus <- tm_map(tweetCorpus, removeURL)
   tweetCorpus <- tm_map(tweetCorpus, removePunctuation)
   tweetCorpus <- tm_map(tweetCorpus, removeNumbers)
   tweetCorpus <- tm_map(tweetCorpus, removeWords, c(stopwords("english"),"rt","http","retweet"))
