@@ -42,11 +42,7 @@ twitter.getTweets <- function(timeOut=10,noOfTweets=300) {
 }
 
 removeURL <- function(tweetText) {
-<<<<<<< HEAD
-  gsub("http[[:alnum:][:punct:]]+", "", tweetText)
-=======
-     gsub("http[[:alnum:][:punct:]]+", "", tweetText)
->>>>>>> 37f438ff4c0301d132fb209b8bfbeb468fd2a113
+ gsub("http[[:alnum:][:punct:]]+", "", tweetText)
 }
 
 twitter.preprocessTweets <- function(tweets) {
