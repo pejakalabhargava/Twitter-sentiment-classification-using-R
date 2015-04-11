@@ -77,27 +77,24 @@ STEP 4: Add your consumer key, consumer secret, access key and access token.
 			consumerKey <- "YOUR CONSUMER KEY"
 			consumerSecret <- "YOUR CONSUMER SECRET"
       accessKey <- "YOUR ACCESS KEY"
-      accesstoken <- "YOUR ACCESS TOKEN"
+      accessTokenSecret <- "YOUR ACCESS TOKEN SECRET"
 
 STEP 5: invoke the classifyTweets methods with the corresponding parameters
-			classifyTweets(numberOfTweetsForTest=300,NumberOfTweetsForTrain=3000,numberOfIterations = 4,splitConfidence="0.7", authentication_object=my_oauth)
+			classifyTweets(numberOfTweetsForTest=300,NumberOfTweetsForTrain=3000,numberOfIterations = 4,splitConfidence="0.7")
 
 ==================================================================================================
 INPUT:
 classifyTweets = function(numberOfTweetsForTest=300,NumberOfTweetsForTrain=3000,
-             numberOfIterations = 2,splitConfidence="0.5",authentication_object=NULL,consumerKey=NULL,consumerSecret=NULL,accessKey=NULL,accessToken=NULL) {
+             numberOfIterations = 2,splitConfidence="0.5",consumerKey=NULL,consumerSecret=NULL,accessKey=NULL,accessTokenSecret=NULL) {
 
 numberOfTweetsForTest				: The number of tweets to be used in the test set
 NumberOfTweetsForTrain				: The number of tweets to be used in the train set
 numberOfIterations					: Number of iteration of model rebuilding to be performed with as many newer test sets
 splitConfidence						: the value of splitConfidence to be specified for the HoeffdingTree
-authentication_object 				: The authentication object to be passed for twitter stream access
 consumerKey 						: The user's consumerKey string
 consumerSecret 						: The user's consumerSecret string
 accessKey                 : The user's access key
-accessToken               : The user's access token
-
-NOTE: This requires the user to either pass the authentication_object or the (consumerKey, consumerSecret) parameters.
+accessTokenSecret               : The user's access token secret
 
 
 ==================================================================================================
