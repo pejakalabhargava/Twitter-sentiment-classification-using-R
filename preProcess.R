@@ -9,7 +9,7 @@ twitter.preprocessTweets <- function(tweets) {
   tweets = iconv(tweets, "LATIN1", "UTF-8",sub="")
   tweets = iconv(tweets, "LATIN2", "UTF-8",sub="")
   #Create corpus out of the tweets
-  tweetCorpus <- Corpus(VectorSource(as.character(tweets)),readerControl=list(language="en"))
+  tweetCorpus <- Corpus(VectorSource(tweets),readerControl=list(language="en"))
   #Convert to lowercase
   tweetCorpus <- tm_map(tweetCorpus, content_transformer(tolower), lazy = TRUE)
   #Remove the URLs from the tweet

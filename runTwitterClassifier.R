@@ -21,5 +21,5 @@ access_token = "61251563-qyleRuLgWPWpWkmsuq99oSpOhk0s3tuE1KI4o0Zwq"
 access_token_secret = "Rl1pSppW8EpaUoKhibEUEHxgLzY68i8M05ClPFYH1W9GI"
 
 # Call the below function with the above parameters, as shown
-classifyTweets(numberOfTweetsForTest=200,NumberOfTweetsForTrain=600,numberOfIterations = 2,splitConfidence="0.7",
+classifyTweets(numberOfTweetsForTest=200,NumberOfTweetsForTrain=600,numberOfIterations = 5,splitConfidence="0.7",
                consumer_api_key,consumer_api_secret,access_token,access_token_secret)

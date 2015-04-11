@@ -1,6 +1,6 @@
 
 #This method is used to classify the tweets as love or hate
-classifyTweets = function(numberOfTweetsForTest=300,NumberOfTweetsForTrain=3000,
+classifyTweets = function(numberOfTweetsForTest=300,NumberOfTweetsForTrain=1000,
                           numberOfIterations = 2,splitConfidence="0.5",
                           consumer_api_key,consumer_api_secret,access_token,access_token_secret) {
   #-----------------------------------------------------------------------------------------------

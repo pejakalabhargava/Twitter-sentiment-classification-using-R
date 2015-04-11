@@ -4,13 +4,6 @@ Twitter sentiment classification using R
 The goal of the project is to classify tweets from Twitter’s stream using R.
 ==================================================================================================
 
-Members:
-Bhargava Pejakala Kakrannaya(bkakran@ncsu.edu)
-Nakul Chakrapani (nchakra2@ncsu.edu)
-Rakesh Gopal Kavodkar(rgopalk@ncsu.edu)
-
-==================================================================================================
-
 Implementation Language : R
 
 Details:
@@ -46,11 +39,11 @@ The files attached in the submission are:
 model.R                        		: Contains methods for creation and rebuilding of the model
 preProcess.R                   		: Contains steps for preprocessing and feature selection
 setUp.R                        		: Installing and loading of the required libraries
-twitterUtility.R 					        : Contains methods related to authentication and capturing tweets
+twitterUtility.R 					: Contains methods related to authentication and capturing tweets
 my_oauth.Rdata                 		: Sample Authentication File
 runTwitterClassifier.R         		: Contains the sample execution code
 twitterSentimentalClassifier.R 		: Connects the end to end logic, starting with authentication, preprocessing, feature selection
-									                  and building the modeling
+									  and building the modeling
 ==================================================================================================
 How to execute Code?
 
@@ -74,27 +67,29 @@ STEP 3: Install/Load the required libraries by invoking
 
 STEP 4: Add your consumer key, consumer secret, access key and access token.
 
-			consumerKey <- "YOUR CONSUMER KEY"
-			consumerSecret <- "YOUR CONSUMER SECRET"
-      accessKey <- "YOUR ACCESS KEY"
-      accessTokenSecret <- "YOUR ACCESS TOKEN SECRET"
+			consumer_api_key <- "YOUR CONSUMER KEY"
+			consumer_api_secret <- "YOUR CONSUMER SECRET"
+	      	access_token <- "YOUR ACCESS KEY"
+	      	access_token_secret <- "YOUR ACCESS TOKEN SECRET"
 
 STEP 5: invoke the classifyTweets methods with the corresponding parameters
-			classifyTweets(numberOfTweetsForTest=300,NumberOfTweetsForTrain=3000,numberOfIterations = 4,splitConfidence="0.7")
+		
+		classifyTweets(numberOfTweetsForTest=200,NumberOfTweetsForTrain=600,numberOfIterations = 5,splitConfidence="0.7",
+    				   consumer_api_key,consumer_api_secret,access_token,access_token_secret)
 
 ==================================================================================================
 INPUT:
 classifyTweets = function(numberOfTweetsForTest=300,NumberOfTweetsForTrain=3000,
-             numberOfIterations = 2,splitConfidence="0.5",consumerKey=NULL,consumerSecret=NULL,accessKey=NULL,accessTokenSecret=NULL) {
+             numberOfIterations = 2,splitConfidence="0.5",consumer_api_key,consumer_api_secret,access_token,access_token_secret) {
 
 numberOfTweetsForTest				: The number of tweets to be used in the test set
 NumberOfTweetsForTrain				: The number of tweets to be used in the train set
 numberOfIterations					: Number of iteration of model rebuilding to be performed with as many newer test sets
 splitConfidence						: the value of splitConfidence to be specified for the HoeffdingTree
-consumerKey 						: The user's consumerKey string
-consumerSecret 						: The user's consumerSecret string
-accessKey                 : The user's access key
-accessTokenSecret               : The user's access token secret
+consumer_api_key 					: The user's consumerKey string
+consumer_api_secret 				: The user's consumerSecret string
+access_token                 		: The user's access key
+access_token_secret               	: The user's access token secret
 
 
 ==================================================================================================
