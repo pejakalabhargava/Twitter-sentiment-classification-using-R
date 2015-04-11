@@ -15,13 +15,11 @@ load.requiredLibraries()
 #---------------------------------------------------------------------------------------
 
 # Enter your consumer key and secret
-consumerKey <- "YOUR CONSUMER KEY"
-consumerSecret <- "YOUR CONSUMER SECRET"
-
-# Enter the name of the twitter authentication file and load it
-authentication_file = "my_oauth.Rdata"
-load(authentication_file)
+consumer_api_key = "AZ5TeacQBwKvjljHdzMytp1GL"
+consumer_api_secret = "noJOtlBCE0tRf1dNUJBm7ilp5reS627TjuawPpkn5cfHATQzNS"
+access_token = "61251563-qyleRuLgWPWpWkmsuq99oSpOhk0s3tuE1KI4o0Zwq"
+access_token_secret = "Rl1pSppW8EpaUoKhibEUEHxgLzY68i8M05ClPFYH1W9GI"
 
 # Call the below function with the above parameters, as shown
-classifyTweets(numberOfTweetsForTest=300,NumberOfTweetsForTrain=3000,numberOfIterations = 4,splitConfidence="0.7",
-               authentication_object=my_oauth)
+classifyTweets(numberOfTweetsForTest=200,NumberOfTweetsForTrain=600,numberOfIterations = 2,splitConfidence="0.7",
+               consumer_api_key,consumer_api_secret,access_token,access_token_secret)

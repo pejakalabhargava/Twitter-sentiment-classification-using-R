@@ -1,7 +1,7 @@
 #This installs all the required packages for the project
 install.requiredPackages<- function(){
   #Install required packages
-  install.packages("streamR")
+  install.packages("twitteR")
   install.packages("devtools")
   install.packages("ROAuth")
   install.packages("tm")
@@ -11,7 +11,7 @@ install.requiredPackages<- function(){
 
 #This installs  all the required packages for the project
 load.requiredLibraries <-function(){
-  library(streamR)
+  library(twitteR)
   library(devtools)
   library(ROAuth)
   library(tm)
