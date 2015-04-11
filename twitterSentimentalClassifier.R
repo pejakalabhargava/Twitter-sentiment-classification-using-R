@@ -95,6 +95,7 @@ classifyTweets = function(numberOfTweetsForTest=300,NumberOfTweetsForTrain=3000,
     
     confusionMat = table(modelPredict,testData.dataframe$Class)
     #Build contigency table
+    print("---------------------------------------------------------------------------------------")
     print("Confusion matrix is as follows:")
     print(table(modelPredict,testData.dataframe$Class))
     if(ncol(confusionMat) == 2 && nrow (confusionMat) == 2) {
@@ -103,6 +104,7 @@ classifyTweets = function(numberOfTweetsForTest=300,NumberOfTweetsForTrain=3000,
     } else {
       print("The confusion matrix is not 2*2")
     }
+    print("---------------------------------------------------------------------------------------")
     # Rebuild the model by sending the existing set of testTweets as a stream
     print("Update the model with the test data.")
     datastream <- datastream_dataframe(data=testData.dataframe)

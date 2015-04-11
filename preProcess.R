@@ -11,20 +11,21 @@ twitter.preprocessTweets <- function(tweets) {
   tweets = iconv(tweets, "LATIN2", "UTF-8",sub="")
   #Create corpus out of the tweets
   tweetCorpus <- Corpus(VectorSource(tweets),readerControl=list(language="en"))
+  tweetCorpus <- tm_map(tweetCorpus,content_transformer(function(x) iconv(x, to='UTF-8-MAC', sub='byte')),mc.cores=1)
   #Convert to lowercase
-  tweetCorpus <- tm_map(tweetCorpus, content_transformer(tolower))
+  tweetCorpus <- tm_map(tweetCorpus, tolower)
   #Remove the URLs from the tweet
-  tweetCorpus <- tm_map(tweetCorpus, content_transformer(removeURL))
+  tweetCorpus <- tm_map(tweetCorpus, removeURL)
   #Removes all the punctuation
-  tweetCorpus <- tm_map(tweetCorpus, content_transformer(removePunctuation))
+  tweetCorpus <- tm_map(tweetCorpus, removePunctuation)
   #Removes all the numbers
-  tweetCorpus <- tm_map(tweetCorpus, content_transformer(removeNumbers))
+  tweetCorpus <- tm_map(tweetCorpus, removeNumbers)
   #removes the stop words 
-  tweetCorpus <- tm_map(tweetCorpus, content_transformer(removeWords), c(stopwords("english"),"rt","http","retweet"))
+  tweetCorpus <- tm_map(tweetCorpus, removeWords, c(stopwords("english"),"rt","http","retweet"))
   #Stem the document using SnowballC
-  tweetCorpus <- tm_map(tweetCorpus, content_transformer(stemDocument), language="english")
+  tweetCorpus <- tm_map(tweetCorpus, stemDocument, language="english")
   #Convert to plain text document
-  tweetCorpus <- tm_map(tweetCorpus, content_transformer(PlainTextDocument))
+  tweetCorpus <- tm_map(tweetCorpus, PlainTextDocument)
   return(tweetCorpus)
 }
 
@@ -37,5 +38,6 @@ twitter.selectFeatures <- function(twitterDocMatrix,minfreq = 3) {
   dm.matrix = as.matrix(twitterDocMatrix)
   #selct the subset of features
   dm.matrix =  dm.matrix[,frequentTerms]
+  
   return(dm.matrix)
 }
