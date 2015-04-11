@@ -1,4 +1,4 @@
- 
+
 =================================================================================================
 Twitter sentiment classification using R
 The goal of the project is to classify tweets from Twitter’s stream using R.
@@ -14,25 +14,25 @@ Rakesh Gopal Kavodkar(rgopalk@ncsu.edu)
 Implementation Language : R
 
 Details:
-platform       x86_64-apple-darwin13.1.0   
-arch           x86_64                      
-os             darwin13.1.0                
-system         x86_64, darwin13.1.0        
-status                                     
-major          3                           
-minor          1.1                         
-year           2014                        
-month          07                          
-day            10                          
-svn rev        66115                       
-language       R                           
+platform       x86_64-apple-darwin13.1.0
+arch           x86_64
+os             darwin13.1.0
+system         x86_64, darwin13.1.0
+status
+major          3
+minor          1.1
+year           2014
+month          07
+day            10
+svn rev        66115
+language       R
 version.string R version 3.1.1 (2014-07-10)
-nickname       Sock it to Me 
+nickname       Sock it to Me
 
 ==================================================================================================
 
 Required packages:
-  "streamR"
+  "twitteR"
   "devtools"
   "ROAuth"
   "tm"
@@ -46,11 +46,11 @@ The files attached in the submission are:
 model.R                        		: Contains methods for creation and rebuilding of the model
 preProcess.R                   		: Contains steps for preprocessing and feature selection
 setUp.R                        		: Installing and loading of the required libraries
-twitterUtility.R 					: Contains methods related to authentication and capturing tweets
+twitterUtility.R 					        : Contains methods related to authentication and capturing tweets
 my_oauth.Rdata                 		: Sample Authentication File
 runTwitterClassifier.R         		: Contains the sample execution code
-twitterSentimentalClassifier.R 		: Connects the end to end logic, starting with authentication, preprocessing, feature selection 
-									  and building the modeling
+twitterSentimentalClassifier.R 		: Connects the end to end logic, starting with authentication, preprocessing, feature selection
+									                  and building the modeling
 ==================================================================================================
 How to execute Code?
 
@@ -61,7 +61,7 @@ Details are as below,
 STEP 1: Set the current working directory to the directory that contains the submission files
 			setwd("/path/to/sumission/files")
 
-STEP 2: Source the included files as given 
+STEP 2: Source the included files as given
 			source("setUp.R")
 			source("twitterUtility.R")
 			source("preProcess.R")
@@ -72,13 +72,12 @@ STEP 3: Install/Load the required libraries by invoking
 			install.requiredPackages()
 			load.requiredLibraries()
 
-STEP 4: Add your consumer key and secret or load the authentication object
-			
+STEP 4: Add your consumer key, consumer secret, access key and access token.
+
 			consumerKey <- "YOUR CONSUMER KEY"
 			consumerSecret <- "YOUR CONSUMER SECRET"
-							OR
-			authentication_file = "my_oauth.Rdata"
-			load(authentication_file)
+      accessKey <- "YOUR ACCESS KEY"
+      accesstoken <- "YOUR ACCESS TOKEN"
 
 STEP 5: invoke the classifyTweets methods with the corresponding parameters
 			classifyTweets(numberOfTweetsForTest=300,NumberOfTweetsForTrain=3000,numberOfIterations = 4,splitConfidence="0.7", authentication_object=my_oauth)
@@ -86,7 +85,7 @@ STEP 5: invoke the classifyTweets methods with the corresponding parameters
 ==================================================================================================
 INPUT:
 classifyTweets = function(numberOfTweetsForTest=300,NumberOfTweetsForTrain=3000,
-             numberOfIterations = 2,splitConfidence="0.5",authentication_object=NULL,consumerKey=NULL,consumerSecret=NULL) {
+             numberOfIterations = 2,splitConfidence="0.5",authentication_object=NULL,consumerKey=NULL,consumerSecret=NULL,accessKey=NULL,accessToken=NULL) {
 
 numberOfTweetsForTest				: The number of tweets to be used in the test set
 NumberOfTweetsForTrain				: The number of tweets to be used in the train set
@@ -95,8 +94,10 @@ splitConfidence						: the value of splitConfidence to be specified for the Hoef
 authentication_object 				: The authentication object to be passed for twitter stream access
 consumerKey 						: The user's consumerKey string
 consumerSecret 						: The user's consumerSecret string
+accessKey                 : The user's access key
+accessToken               : The user's access token
 
-NOTE: This requires the user to either pass the authentication_object or the (consumerKey, consumerSecret) parameters. 
+NOTE: This requires the user to either pass the authentication_object or the (consumerKey, consumerSecret) parameters.
 
 
 ==================================================================================================
@@ -106,13 +107,13 @@ Sample Output is as below,
 
 "---------------------------------------------------------------------------------------"
 "Confusion matrix is as follows:"
-            
+
 modelPredict hate love
         hate    8    9
         love   17  153
 
 "Accuracy for the  1  iteration is: 86.096256684492"
 
-NOTE: 1) We could run the code succesfully for Ubuntu and Mac OS.
+NOTE: 1) We could run the code successfully for Ubuntu and Mac OS.
 	  2) Make sure all the libraries are loaded properly.
 ==================================================================================================
