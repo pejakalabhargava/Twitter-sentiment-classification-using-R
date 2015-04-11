@@ -99,7 +99,7 @@ classifyTweets = function(numberOfTweetsForTest=300,NumberOfTweetsForTrain=3000,
     print(table(modelPredict,testData.dataframe$Class))
     if(ncol(confusionMat) == 2 && nrow (confusionMat) == 2) {
       perfMeasure = getPerformanceMeasure(TP=confusionMat[1,1],FP=confusionMat[1,2],FN=confusionMat[2,1],TN=confusionMat[2,2]);
-      print(paste("Accuracy for the ",i," iteration is:",perfMeasure$Accuracy))
+      print(paste("Accuracy for the ",i," iteration is:",perfMeasure$Accuracy*100))
     } else {
       print("The confusion matrix is not 2*2")
     }
