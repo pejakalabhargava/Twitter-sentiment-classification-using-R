@@ -11,9 +11,8 @@ twitter.preprocessTweets <- function(tweets) {
   tweets = iconv(tweets, "LATIN2", "UTF-8",sub="")
   #Create corpus out of the tweets
   tweetCorpus <- Corpus(VectorSource(tweets),readerControl=list(language="en"))
-  tweetCorpus <- tm_map(tweetCorpus,content_transformer(function(x) iconv(x, to='UTF-8-MAC', sub='byte')),mc.cores=1)
   #Convert to lowercase
-  tweetCorpus <- tm_map(tweetCorpus, tolower)
+  tweetCorpus <- tm_map(tweetCorpus, content_transformer(tolower))
   #Remove the URLs from the tweet
   tweetCorpus <- tm_map(tweetCorpus, removeURL)
   #Removes all the punctuation
