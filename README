@@ -113,6 +113,6 @@ modelPredict hate love
 
 "Accuracy for the  1  iteration is: 86.096256684492"
 
-NOTE: 1) We could run the code succesfully for Ubuntu and Mac OS.
+NOTE: 1) Code is tested succesfully for Ubuntu and Mac OS.
 	  2) Make sure all the libraries are loaded properly.
 ==================================================================================================

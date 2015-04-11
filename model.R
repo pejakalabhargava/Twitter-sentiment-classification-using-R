@@ -13,9 +13,9 @@ twitter.appendClass <- function(doc.matrixToModify) {
 }
 # This method returns the test data for the model validation.Makes sure that the attribute set
 # in the test data are same as the training data.
-twitter.getTestData <- function(auth_object,trainDataFrame,numberOfTweets=10,timeOut=10) {
+twitter.getTestData <- function(trainDataFrame,consumer_api_key,consumer_api_secret,access_token,access_token_secret,numberOfTweets=numberOfTweetsForTest) {
   # Get tweets for the test data
-  testTweets = twitter.getTweets(auth_object,timeOut=timeOut,noOfTweets=numberOfTweets)
+  testTweets = twitter.getTweets(consumer_api_key,consumer_api_secret,access_token,access_token_secret,noOfTweets=numberOfTweets)
   # Preprocess the test tweets
   testTweetCorpus = twitter.preprocessTweets(testTweets)
   # Construct the Doc Term Matrix

@@ -1,52 +1,39 @@
 
 #This method is used to classify the tweets as love or hate
 classifyTweets = function(numberOfTweetsForTest=300,NumberOfTweetsForTrain=3000,
-                          numberOfIterations = 2,splitConfidence="0.5",authentication_object=NULL,consumerKey=NULL,consumerSecret=NULL) {
+                          numberOfIterations = 2,splitConfidence="0.5",
+                          consumer_api_key,consumer_api_secret,access_token,access_token_secret) {
   #-----------------------------------------------------------------------------------------------
-  #Step1 : Authenticate
- 
-  print("---------------------------------------------------------------------------------------")
-  print("Step1: Authenticating with twitter to get the tweets")
-  options(httr_oauth_cache=T)
-  if(is.null(authentication_object)) {
-    print("Connecting to twitter to get the PIN code based on consumerKey and consumerSecret")
-    authentication_file = twitter.authenticate(consumerKey=consumerKey,consumerSecret = consumerSecret)
-  }
-  print("Loading the Authentication File for twitter stream access.")
-  load(authentication_file)
-  print("---------------------------------------------------------------------------------------")
-  
-  #------------------------------------------------------------------------------------------------
-  #Step2: Get all tweets filtered by 'love' or 'hate'
-  print(paste("Step 2:Capturing tweets for training with NumberOfTweetsForTrain =",NumberOfTweetsForTrain))
-  tweets = twitter.getTweets(auth_object = authentication_object,timeOut=60,noOfTweets=NumberOfTweetsForTrain)
+  #Step1: Get all tweets filtered by 'love' or 'hate'
+  print(paste("Step 1:Capturing tweets for training with NumberOfTweetsForTrain =",NumberOfTweetsForTrain))
+  tweets = twitter.getTweets(consumer_api_key,consumer_api_secret,access_token,access_token_secret,noOfTweets=NumberOfTweetsForTrain)
   print("---------------------------------------------------------------------------------------")
   
   #------------------------------------------------------------------------------------------------
   
   #step3: Preprocess Tweets
-  print("Step3 :Preprocessing Tweets")
+  print("Step2 :Preprocessing Tweets")
   tweetCorpus = twitter.preprocessTweets(tweets)
   print("---------------------------------------------------------------------------------------")
   
   #---------------------------------------------------------------------------------------
   
   #step4: Create DocumentMatrix
-  print("Step4 :Creating Document Matrix for tweet corpus.")
+  print("Step3 :Creating Document Matrix for tweet corpus.")
   twitterDocMatrix <- DocumentTermMatrix(tweetCorpus, control = list(minWordLength = 1))
   print("---------------------------------------------------------------------------------------")
   
   #---------------------------------------------------------------------------------------
   
   #step5: Feature Selection
-  print("Step5 :Generate feature selection matrix with minfreq as 3")
+  print("Step4 :Generate feature selection matrix with minfreq as 3")
   doc.matrix = twitter.selectFeatures(twitterDocMatrix,minfreq = 3)
   print("---------------------------------------------------------------------------------------")
   
   #---------------------------------------------------------------------------------------
   
   #step6: Build Model
-  print("Step6 :Start Model Building phase.")
+  print("Step5 :Start Model Building phase.")
   
   #Appened Class to the model
   print("Append Class to the data.")
@@ -64,20 +51,20 @@ classifyTweets = function(numberOfTweetsForTest=300,NumberOfTweetsForTrain=3000,
   hdt <- HoeffdingTree(splitConfidence=splitConfidence)
   datastream <- datastream_dataframe(data=doc.dataFrame)
   print("Generate the model using the training data")
-  model <- trainMOA(model=hdt, formula=Class ~ ., data=datastream,chunksize = 10)
+  model <- trainMOA(model=hdt, formula=Class ~ ., data=datastream,chunksize = 10,reset=T)
   
   #Start:Debug
   #model$model
   #colnames(doc.dataFrame)[which(!colnames(doc.dataFrame)%in%colnames(testdocWithoutClass.dataframe))]
   #End:Debug
   
-  print("Step6 :End of Model Building phase.")
+  print("Step5 :End of Model Building phase.")
   print("---------------------------------------------------------------------------------------")
   
   #---------------------------------------------------------------------------------------
   
   #step7: TestModel
-  print("Step7 :Test the model with new set of tweet stream.")
+  print("Step6 :Test the model with new set of tweet stream.")
   print(paste("parameters are NumberOfIterations =",numberOfIterations," and number of tweets for testing is:",numberOfTweetsForTest))
   
   for(i in 1:numberOfIterations) {
@@ -86,7 +73,7 @@ classifyTweets = function(numberOfTweetsForTest=300,NumberOfTweetsForTrain=3000,
     
     print("Get test tweets for classification.");
     #Test model against a new batch of tweets
-    testData.dataframe = twitter.getTestData(auth_object = authentication_object,doc.dataFrame,numberOfTweets=numberOfTweetsForTest,timeOut=40)
+    testData.dataframe = twitter.getTestData(doc.dataFrame,consumer_api_key,consumer_api_secret,access_token,access_token_secret,numberOfTweets=numberOfTweetsForTest)
     testData.dataframe <- factorise(testData.dataframe)
 
     print("Predict the class for the test data using the model.");

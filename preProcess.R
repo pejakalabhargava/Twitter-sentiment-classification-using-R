@@ -5,14 +5,13 @@ removeURL <- function(tweetText) {
 
 #This method preprocess the tweets
 twitter.preprocessTweets <- function(tweets) {
-  #Removes all the ASCII, ISO_8859-2 and LATIN2 words from the tweet
-  tweets = iconv(tweets, "ASCII", "UTF-8", sub="")
-  tweets = iconv(tweets, "ISO_8859-2", "UTF-8",sub="")
+  #get rid of latin words by cnverting to utf-8
+  tweets = iconv(tweets, "LATIN1", "UTF-8",sub="")
   tweets = iconv(tweets, "LATIN2", "UTF-8",sub="")
   #Create corpus out of the tweets
-  tweetCorpus <- Corpus(VectorSource(tweets),readerControl=list(language="en"))
+  tweetCorpus <- Corpus(VectorSource(as.character(tweets)),readerControl=list(language="en"))
   #Convert to lowercase
-  tweetCorpus <- tm_map(tweetCorpus, content_transformer(tolower))
+  tweetCorpus <- tm_map(tweetCorpus, content_transformer(tolower), lazy = TRUE)
   #Remove the URLs from the tweet
   tweetCorpus <- tm_map(tweetCorpus, removeURL)
   #Removes all the punctuation
@@ -22,9 +21,9 @@ twitter.preprocessTweets <- function(tweets) {
   #removes the stop words 
   tweetCorpus <- tm_map(tweetCorpus, removeWords, c(stopwords("english"),"rt","http","retweet"))
   #Stem the document using SnowballC
-  tweetCorpus <- tm_map(tweetCorpus, stemDocument, language="english")
+  tweetCorpus <- tm_map(tweetCorpus, stemDocument)
   #Convert to plain text document
-  tweetCorpus <- tm_map(tweetCorpus, PlainTextDocument)
+  tweetCorpus <- tm_map(tweetCorpus, PlainTextDocument,language="english")
   return(tweetCorpus)
 }
 
@@ -37,6 +36,5 @@ twitter.selectFeatures <- function(twitterDocMatrix,minfreq = 3) {
   dm.matrix = as.matrix(twitterDocMatrix)
   #selct the subset of features
   dm.matrix =  dm.matrix[,frequentTerms]
-  
   return(dm.matrix)
 }
